@@ -1,0 +1,40 @@
+package triangle
+
+import (
+	"errors"
+	"math"
+	"sort"
+)
+
+const (
+	NaT Kind = iota
+	Equ
+	Iso
+	Sca
+)
+
+type Kind int
+
+func KindFromSides(a, b, c float64) (Kind, error) {
+
+	data := []float64{a, b, c}
+
+	sort.Float64s(data)
+
+	//https://en.wikipedia.org/wiki/Triangle_inequality
+
+	if data[0]+data[1] < data[2] || math.IsNaN(data[0]) ||
+		data[0] <= 0 || math.Inf(1) == data[2] {
+		return NaT, errors.New("Not a triangle")
+	}
+
+	if data[0] == data[1] && data[1] == data[2] {
+		return Equ, nil
+	}
+
+	if data[0] == data[1] || data[1] == data[2] {
+		return Iso, nil
+	}
+
+	return Sca, nil
+}
